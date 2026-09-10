@@ -1,7 +1,7 @@
 import axios from "axios";
 import { load } from "cheerio";
 import { supabase } from "./supabaseClient.js";
-import { sendDiscordNotification } from "./notifyDiscord.js";
+import { sendDiscordNotification, sendDiscordMessage } from "./notifyDiscord.js";
 
 const BASE = (process.env.BASE_URL || "").replace(/\/+$/, "");
 const REQUEST_TIMEOUT_MS = 15000;
@@ -87,6 +87,17 @@ async function getActiveDiscordWebhooks() {
   return (data || []).map((row) => row.config?.webhook_url).filter(Boolean);
 }
 
+async function getHealth() {
+  const { data, error } = await supabase.from("scraper_health").select("*").eq("id", 1).single();
+  if (error) throw new Error(`Lecture scraper_health: ${error.message}`);
+  return data;
+}
+
+async function updateHealth(patch) {
+  const { error } = await supabase.from("scraper_health").update(patch).eq("id", 1);
+  if (error) console.error(`❌ Mise à jour scraper_health: ${error.message}`);
+}
+
 export default async function scrapeEpisodes() {
   const watchlist = await getActiveWatchlist();
 
@@ -100,6 +111,7 @@ export default async function scrapeEpisodes() {
 
   const newEpisodesTotal = [];
   const errors = [];
+  let redirectedHost = null;
 
   for (let i = 0; i < watchlist.length; i++) {
     const item = watchlist[i];
@@ -107,10 +119,24 @@ export default async function scrapeEpisodes() {
     console.log(`[${i + 1}/${watchlist.length}] Scraping: ${pageUrl}`);
 
     try {
-      const { data } = await axios.get(pageUrl, {
+      const response = await axios.get(pageUrl, {
         timeout: REQUEST_TIMEOUT_MS,
         headers: { "User-Agent": USER_AGENT },
       });
+      const { data } = response;
+
+      // Si voiranime redirige vers un autre domaine, on le détecte pour alerter
+      // avant que ça casse complètement (le domaine change régulièrement).
+      const finalUrl = response.request?.res?.responseUrl;
+      if (finalUrl && !redirectedHost) {
+        try {
+          const finalHost = new URL(finalUrl).host;
+          const baseHost = new URL(BASE).host;
+          if (finalHost !== baseHost) redirectedHost = finalHost;
+        } catch {
+          // URL invalide, on ignore silencieusement
+        }
+      }
 
       const $ = load(data);
       const episodes = extractEpisodes($, pageUrl);
@@ -155,7 +181,44 @@ export default async function scrapeEpisodes() {
     console.warn(`⚠️  ${errors.length}/${watchlist.length} série(s) en échec ce run.`);
   }
 
+  await checkScraperHealth({ allFailed: errors.length === watchlist.length, redirectedHost, webhooks });
+
   return newEpisodesTotal;
+}
+
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+async function checkScraperHealth({ allFailed, redirectedHost, webhooks }) {
+  const health = await getHealth();
+
+  if (allFailed) {
+    const newCount = health.consecutive_full_failures + 1;
+    const alertedRecently =
+      health.last_failure_alert_at &&
+      Date.now() - new Date(health.last_failure_alert_at).getTime() < ONE_DAY_MS;
+    const shouldAlert = newCount >= 2 && !alertedRecently;
+
+    await updateHealth({
+      consecutive_full_failures: newCount,
+      ...(shouldAlert ? { last_failure_alert_at: new Date().toISOString() } : {}),
+    });
+
+    if (shouldAlert) {
+      const msg = `⚠️ **Le scraping échoue sur toutes les séries** depuis ${newCount} run(s) d'affilée.\nLe domaine \`${BASE}\` a peut-être changé ou est bloqué. Vérifie voiranime et mets à jour \`BASE_URL\` si besoin.`;
+      for (const webhookUrl of webhooks) await sendDiscordMessage(webhookUrl, msg);
+    }
+  } else if (health.consecutive_full_failures > 0) {
+    await updateHealth({ consecutive_full_failures: 0 });
+  }
+
+  if (redirectedHost && redirectedHost !== health.last_redirect_alert_host) {
+    await updateHealth({
+      last_redirect_alert_host: redirectedHost,
+      last_redirect_alert_at: new Date().toISOString(),
+    });
+    const msg = `🔀 **voiranime semble avoir redirigé vers un nouveau domaine** : \`${redirectedHost}\`.\nPense à mettre à jour \`BASE_URL\` (actuellement \`${BASE}\`) si ça se confirme.`;
+    for (const webhookUrl of webhooks) await sendDiscordMessage(webhookUrl, msg);
+  }
 }
 
 // Permet de lancer `node src/scrape.js` directement (npm run test-scrape)
