@@ -1,0 +1,19 @@
+{
+  "name": "anime-notifs",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Scraper d'épisodes d'anime avec notifications Discord, backend Supabase.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test-scrape": "node src/scrape.js",
+    "add-anime": "node src/addAnime.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "axios": "^1.12.2",
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.3"
+  }
+}
