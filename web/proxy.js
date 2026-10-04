@@ -3,14 +3,18 @@ import { NextResponse } from "next/server";
 // Authentification HTTP Basic très simple : le navigateur affiche une popup
 // login/mot de passe native. Suffisant pour un usage perso, pas un vrai
 // système de comptes (pas besoin vu qu'il n'y a qu'un seul utilisateur).
-export function middleware(request) {
+// (Next 16 : "proxy" remplace l'ancienne convention "middleware".)
+export function proxy(request) {
   const authHeader = request.headers.get("authorization");
 
   if (authHeader?.startsWith("Basic ")) {
-    const encoded = authHeader.split(" ")[1];
-    const [user, pwd] = atob(encoded).split(":");
+    const decoded = atob(authHeader.slice("Basic ".length));
+    // On coupe au premier ":" seulement : le mot de passe peut en contenir.
+    const sep = decoded.indexOf(":");
+    const user = decoded.slice(0, sep);
+    const pwd = decoded.slice(sep + 1);
 
-    if (user === process.env.APP_USERNAME && pwd === process.env.APP_PASSWORD) {
+    if (sep !== -1 && user === process.env.APP_USERNAME && pwd === process.env.APP_PASSWORD) {
       return NextResponse.next();
     }
   }

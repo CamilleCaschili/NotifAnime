@@ -1,21 +1,5 @@
 import { supabase } from "./supabaseClient.js";
-
-/**
- * Extrait le chemin (path) d'une URL, quel que soit le domaine collé.
- * Ex: "https://voir-anime.to/anime/wandance/" -> "/anime/wandance/"
- * Ex: "/anime/wandance/" (déjà un chemin) -> "/anime/wandance/"
- */
-function extractPath(input) {
-  const trimmed = input.trim();
-  try {
-    const parsed = new URL(trimmed); // lève une erreur si ce n'est pas une URL absolue
-    return parsed.pathname.replace(/\/?$/, "/");
-  } catch {
-    // Pas une URL absolue : on suppose que c'est déjà un chemin relatif
-    const withLeadingSlash = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
-    return withLeadingSlash.replace(/\/?$/, "/");
-  }
-}
+import { extractPath } from "../shared/extractPath.js";
 
 async function main() {
   const input = process.argv[2];

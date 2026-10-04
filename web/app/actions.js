@@ -2,17 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getSupabaseServer } from "../lib/supabaseServer.js";
-
-function extractPath(input) {
-  const trimmed = input.trim();
-  try {
-    const parsed = new URL(trimmed);
-    return parsed.pathname.replace(/\/?$/, "/");
-  } catch {
-    const withLeadingSlash = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
-    return withLeadingSlash.replace(/\/?$/, "/");
-  }
-}
+import { extractPath } from "../../shared/extractPath.js";
 
 export async function addAnime(formData) {
   const rawUrl = formData.get("url");
