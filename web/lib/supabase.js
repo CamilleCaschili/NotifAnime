@@ -17,8 +17,10 @@ function getEnv() {
  * propres données. Pas de clé service_role dans l'app web.
  */
 export async function createSupabaseServer() {
-  const { url, key } = getEnv();
+  // cookies() d'abord : ça marque la page comme dynamique, donc Next ne tente
+  // pas de la pré-rendre au build (où les variables d'env peuvent manquer).
   const cookieStore = await cookies();
+  const { url, key } = getEnv();
 
   return createServerClient(url, key, {
     cookies: {
