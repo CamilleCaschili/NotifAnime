@@ -8,6 +8,13 @@ import { createServerClient } from "@supabase/ssr";
 export async function proxy(request) {
   let response = NextResponse.next({ request });
 
+  // Variables manquantes (mauvaise config Vercel) : on laisse passer pour que
+  // le site affiche sa page d'erreur au lieu d'une erreur 500 brute.
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+    console.error("SUPABASE_URL et SUPABASE_ANON_KEY doivent être définis.");
+    return response;
+  }
+
   const supabase = createServerClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
     cookies: {
       getAll() {

@@ -22,6 +22,10 @@ GitHub Actions (cron 6h) ──► Supabase (Postgres + Auth) ◄── Site web
   suit quoi), `episodes_notified`, `notification_channels` (webhooks par
   utilisateur), `scraper_health`.
 
+Les nouveaux utilisateurs n'ont rien à faire de spécial : leur compte est créé
+automatiquement à leur première connexion avec Discord, puis ils branchent leur
+salon et ajoutent leurs séries depuis le tableau de bord.
+
 ## Passer de la version perso à la version publique (une seule fois)
 
 Fais les étapes **dans l'ordre** : la migration SQL a besoin que ton compte
@@ -120,3 +124,14 @@ npm run dev            # http://localhost:3000
   `supabase/schema.sql` et `web/lib/notices.js`).
 - **Suppression de compte** : depuis le tableau de bord ; abonnements et salons
   partent avec.
+
+## Dépannage
+- **« La connexion avec Discord n'a pas abouti »** : le détail est dans Vercel >
+  Logs (chercher « Connexion Discord »).
+  - `Database error saving new user` : un trigger sur `auth.users` plante à la
+    création du compte. Liste-les avec
+    `select tgname, pg_get_triggerdef(oid) from pg_trigger where tgrelid = 'auth.users'::regclass and not tgisinternal;`.
+    Le site n'en a besoin d'aucun.
+  - `Unable to exchange external code` : Client Secret Discord incorrect dans Supabase.
+- **Page « Oups, cette page n'a pas pu s'afficher »** : le code d'erreur affiché
+  permet de retrouver l'erreur exacte dans Vercel > Logs.
