@@ -110,13 +110,9 @@ h2 {
 }
 
 .brand-mark {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: var(--accent);
-  color: #0f1115;
+  display: block;
+  width: 30px;
+  height: 30px;
 }
 
 .site-nav {
@@ -364,13 +360,9 @@ h2 {
 
 .discord-avatar {
   flex-shrink: 0;
-  display: grid;
-  place-items: center;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--accent);
-  color: #0f1115;
 }
 
 .discord-body {
@@ -406,7 +398,7 @@ h2 {
   display: flex;
   gap: 12px;
   background: #2b2d31;
-  border-left: 4px solid var(--accent);
+  border-left: 4px solid #e2483a; /* couleur des embeds envoyés (vermillon du logo) */
   border-radius: 4px;
   padding: 10px 12px;
 }
@@ -621,13 +613,10 @@ h2 {
 
 .ds-webhook-avatar {
   flex-shrink: 0;
-  display: grid;
-  place-items: center;
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--accent);
-  color: #0f1115;
+  background: var(--discord); /* avatar par défaut d'un webhook */
 }
 
 .ds-webhook-fields {

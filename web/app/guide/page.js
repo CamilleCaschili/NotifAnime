@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getSession } from "../../lib/supabase.js";
-import { BellIcon, LoginButton, PrimaryLink } from "../components.js";
+import { LoginButton, PrimaryLink } from "../components.js";
 import { MAX_CHANNELS } from "../../lib/notices.js";
 
 export const metadata = {
@@ -36,12 +36,10 @@ function WebhookSettingsMock() {
         <span className="ds-heading">Webhooks</span>
         <span className="ds-button ds-button-secondary">Nouveau webhook</span>
         <div className="ds-webhook">
-          <div className="ds-webhook-avatar" aria-hidden="true">
-            <BellIcon size={24} />
-          </div>
+          <div className="ds-webhook-avatar" aria-hidden="true" />
           <div className="ds-webhook-fields">
             <span className="ds-label">Nom</span>
-            <span className="ds-input">Anime Notifs</span>
+            <span className="ds-input">Captain Hook</span>
             <span className="ds-label">Salon</span>
             <span className="ds-input"># anime-notifs</span>
           </div>
@@ -107,10 +105,10 @@ export default async function GuidePage() {
             Va dans <Path items={["Intégrations", "Webhooks", "Nouveau webhook"]} />.
           </p>
           <p>
-            Discord crée un webhook avec un nom au hasard. Clique dessus pour l'ouvrir et renomme-le{" "}
-            <strong>Anime Notifs</strong> : c'est le nom qui s'affichera sur les messages. Tu peux aussi changer
-            son avatar. Vérifie que le bon salon est sélectionné, puis{" "}
-            <span className="ui-chip">Enregistrer les modifications</span>.
+            Discord crée un webhook avec un nom au hasard (genre « Captain Hook »). Pas besoin de le renommer
+            ni de changer son avatar : nos messages s'affichent toujours au nom d'<strong>Anime Notifs</strong>,
+            avec notre logo. Clique simplement dessus pour l'ouvrir et vérifie que le bon salon est
+            sélectionné.
           </p>
           <WebhookSettingsMock />
         </li>

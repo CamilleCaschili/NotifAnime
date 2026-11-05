@@ -39,5 +39,6 @@ export async function proxy(request) {
 }
 
 export const config = {
-  matcher: "/((?!_next/static|_next/image|favicon.ico|icon.svg).*)",
+  // Pas de session à rafraîchir pour les fichiers statiques (logo, avatar du bot…)
+  matcher: "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
 };

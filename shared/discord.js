@@ -3,7 +3,16 @@
  * Uniquement du `fetch` natif (Node 18+), pas de dépendance.
  */
 
-export const BRAND_COLOR = 0x7c9aff; // même bleu que l'app web
+export const BRAND_COLOR = 0xe2483a; // vermillon du logo
+
+// Tous les messages s'affichent au nom d'Anime Notifs avec son logo, quel que
+// soit le nom ou l'avatar donné au webhook côté Discord.
+const SITE_URL = (process.env.SITE_URL || "https://notif-anime.vercel.app").replace(/\/+$/, "");
+export const BOT_PROFILE = {
+  username: "Anime Notifs",
+  avatar_url: `${SITE_URL}/bot-avatar.png`,
+};
+const FOOTER = { text: "Anime Notifs", icon_url: BOT_PROFILE.avatar_url };
 
 // Seules les vraies URLs de webhook Discord sont acceptées (même règle que la
 // contrainte SQL sur notification_channels) : évite qu'on fasse envoyer des
@@ -98,15 +107,16 @@ export function episodeMessage({ animeTitle, episode, posterUrl }) {
     description: `Nouvel épisode de **${animeTitle || "une série suivie"}**`,
     color: BRAND_COLOR,
     timestamp: new Date().toISOString(),
-    footer: { text: "Anime Notifs" },
+    footer: FOOTER,
   };
   if (posterUrl) embed.thumbnail = { url: posterUrl };
-  return { embeds: [embed] };
+  return { ...BOT_PROFILE, embeds: [embed] };
 }
 
 /** Message envoyé quand on branche un salon, ou via le bouton "Tester". */
 export function testMessage({ isWelcome = false } = {}) {
   return {
+    ...BOT_PROFILE,
     embeds: [
       {
         title: isWelcome ? "✅ Salon connecté à Anime Notifs" : "🔔 Test réussi",
@@ -115,7 +125,7 @@ export function testMessage({ isWelcome = false } = {}) {
           : "Ce salon reçoit bien les notifications d'Anime Notifs.",
         color: BRAND_COLOR,
         timestamp: new Date().toISOString(),
-        footer: { text: "Anime Notifs" },
+        footer: FOOTER,
       },
     ],
   };

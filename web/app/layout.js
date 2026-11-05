@@ -2,11 +2,12 @@ import Link from "next/link";
 import "./globals.css";
 import { getSession } from "../lib/supabase.js";
 import { signOut } from "./auth/actions.js";
-import { BellIcon, LoginButton } from "./components.js";
+import { LoginButton } from "./components.js";
 
 export const metadata = {
   title: "Anime Notifs",
   description: "Reçois une notification Discord dès qu'un nouvel épisode de tes animes sort.",
+  icons: { icon: "/logo.svg", apple: "/apple-touch-icon.png" },
 };
 
 export default async function RootLayout({ children }) {
@@ -18,9 +19,8 @@ export default async function RootLayout({ children }) {
         <header className="site-header">
           <div className="site-header-inner">
             <Link href={user ? "/dashboard" : "/"} className="brand">
-              <span className="brand-mark" aria-hidden="true">
-                <BellIcon />
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="brand-mark" src="/logo.svg" alt="" width={30} height={30} />
               Anime Notifs
             </Link>
             <nav className="site-nav">

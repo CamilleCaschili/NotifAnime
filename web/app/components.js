@@ -2,15 +2,6 @@ import Link from "next/link";
 import { getNotice } from "../lib/notices.js";
 import { signInWithDiscord } from "./auth/actions.js";
 
-export function BellIcon({ size = 16 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-      <path d="M12 3c-3.3 0-5.5 2.5-5.5 5.7v3.8L4.6 15.4V17h14.8v-1.6l-1.9-2.9V8.7C17.5 5.5 15.3 3 12 3Z" />
-      <path d="M9.5 18.5a2.5 2.5 0 0 0 5 0Z" />
-    </svg>
-  );
-}
-
 export function Notice({ code }) {
   const notice = getNotice(code);
   if (!notice) return null;
@@ -44,9 +35,8 @@ export function DiscordEmbedPreview() {
   return (
     <div className="discord-preview" aria-label="Exemple de notification Discord">
       <div className="discord-message">
-        <div className="discord-avatar" aria-hidden="true">
-          <BellIcon size={22} />
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="discord-avatar" src="/bot-avatar.png" alt="" width={40} height={40} />
         <div className="discord-body">
           <div className="discord-author">
             Anime Notifs <span className="discord-bot-tag">APP</span>

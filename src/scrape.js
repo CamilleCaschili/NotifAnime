@@ -2,7 +2,7 @@ import axios from "axios";
 import { load } from "cheerio";
 import { supabase } from "./supabaseClient.js";
 import { extractPath } from "../shared/extractPath.js";
-import { isDiscordWebhookUrl, postWebhook, episodeMessage } from "../shared/discord.js";
+import { BOT_PROFILE, isDiscordWebhookUrl, postWebhook, episodeMessage } from "../shared/discord.js";
 
 const BASE = (process.env.BASE_URL || "").replace(/\/+$/, "");
 // Alertes techniques (domaine qui change, scraping cassé) : uniquement pour
@@ -195,7 +195,7 @@ async function updateHealth(patch) {
 
 async function alertAdmin(content) {
   console.warn(`📣 Alerte admin: ${content}`);
-  if (ADMIN_WEBHOOK_URL) await postWebhook(ADMIN_WEBHOOK_URL, { content });
+  if (ADMIN_WEBHOOK_URL) await postWebhook(ADMIN_WEBHOOK_URL, { ...BOT_PROFILE, content });
 }
 
 export default async function scrapeEpisodes() {
