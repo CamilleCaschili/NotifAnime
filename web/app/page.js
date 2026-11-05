@@ -1,89 +1,92 @@
-import { getSupabaseServer } from "../lib/supabaseServer.js";
-import { addAnime, toggleActive, deleteAnime } from "./actions.js";
+import Link from "next/link";
+import { getSession } from "../lib/supabase.js";
+import { DiscordEmbedPreview, LoginButton, Notice, PrimaryLink } from "./components.js";
 
-export const dynamic = "force-dynamic"; // toujours des données fraîches, pas de cache statique
-
-async function getWatchlist() {
-  const supabase = getSupabaseServer();
-  const { data, error } = await supabase
-    .from("watchlist_items")
-    .select("id, path, title, active, created_at")
-    .order("created_at", { ascending: false });
-
-  if (error) throw new Error(error.message);
-  return data || [];
-}
-
-async function getRecentEpisodes() {
-  const supabase = getSupabaseServer();
-  const { data, error } = await supabase
-    .from("episodes_notified")
-    .select("id, title, link, discovered_at, watchlist_items(title, path)")
-    .order("discovered_at", { ascending: false })
-    .limit(20);
-
-  if (error) throw new Error(error.message);
-  return data || [];
-}
-
-export default async function Page() {
-  const [watchlist, episodes] = await Promise.all([getWatchlist(), getRecentEpisodes()]);
+export default async function HomePage({ searchParams }) {
+  const [{ user }, { notice }] = await Promise.all([getSession(), searchParams]);
 
   return (
-    <main>
-      <h1>Anime Notifs</h1>
-      <p className="subtitle">Gère ta watchlist et consulte les derniers épisodes détectés.</p>
+    <main className="page-wide">
+      <Notice code={notice} />
 
-      <section>
-        <h2>Ajouter une série</h2>
-        <form action={addAnime} className="add-form">
-          <input
-            type="text"
-            name="url"
-            placeholder="https://voir-anime.to/anime/nom/"
-            required
-          />
-          <input type="text" name="title" placeholder="Titre (optionnel)" />
-          <button type="submit">Ajouter</button>
-        </form>
+      <section className="hero">
+        <div className="hero-text">
+          <h1>Ne rate plus aucun épisode.</h1>
+          <p className="hero-lead">
+            Anime Notifs surveille les séries que tu suis sur voiranime et poste un message dans ton serveur
+            Discord dès qu'un nouvel épisode sort.
+          </p>
+          <div className="hero-actions">
+            {user ? (
+              <PrimaryLink href="/dashboard" large>
+                Ouvrir mon tableau de bord
+              </PrimaryLink>
+            ) : (
+              <LoginButton large />
+            )}
+            <Link href="/guide" className="btn btn-ghost btn-large">
+              Lire le guide
+            </Link>
+          </div>
+          <p className="hero-note">Gratuit, sans mot de passe : on utilise ton compte Discord pour te connecter.</p>
+        </div>
+        <DiscordEmbedPreview />
       </section>
 
       <section>
-        <h2>Watchlist ({watchlist.length})</h2>
-        {watchlist.length === 0 && <p className="empty">Aucune série pour l'instant.</p>}
-        {watchlist.map((item) => (
-          <div key={item.id} className={`item ${item.active ? "" : "inactive"}`}>
-            <div className="item-info">
-              <strong>{item.title || item.path}</strong>
-              <span>{item.path}</span>
-            </div>
-            <div className="item-actions">
-              <form action={toggleActive.bind(null, item.id, item.active)}>
-                <button type="submit">{item.active ? "Mettre en pause" : "Réactiver"}</button>
-              </form>
-              <form action={deleteAnime.bind(null, item.id)}>
-                <button type="submit" className="delete">
-                  Supprimer
-                </button>
-              </form>
-            </div>
-          </div>
-        ))}
+        <h2 className="section-title">Comment ça marche</h2>
+        <ol className="steps-grid">
+          <li>
+            <span className="step-number">1</span>
+            <h3>Connecte-toi avec Discord</h3>
+            <p>Un clic, aucun mot de passe à retenir.</p>
+          </li>
+          <li>
+            <span className="step-number">2</span>
+            <h3>Branche un salon</h3>
+            <p>
+              Crée un webhook dans le salon de ton choix et colle son adresse. Compte 2 minutes, le{" "}
+              <Link href="/guide">guide pas à pas</Link> t'accompagne.
+            </p>
+          </li>
+          <li>
+            <span className="step-number">3</span>
+            <h3>Ajoute tes séries</h3>
+            <p>Colle le lien de la page voiranime de chaque série. On vérifie les sorties toutes les 6 heures.</p>
+          </li>
+        </ol>
       </section>
 
-      <section>
-        <h2>Derniers épisodes détectés</h2>
-        {episodes.length === 0 && <p className="empty">Rien pour l'instant.</p>}
-        {episodes.map((ep) => (
-          <div key={ep.id} className="episode">
-            <span className="anime-title">{ep.watchlist_items?.title || ep.watchlist_items?.path}</span>
-            {" — "}
-            <a href={ep.link} target="_blank" rel="noreferrer">
-              {ep.title}
-            </a>
-            <div className="empty">{new Date(ep.discovered_at).toLocaleString("fr-FR")}</div>
-          </div>
-        ))}
+      <section className="faq">
+        <h2 className="section-title">Questions fréquentes</h2>
+        <details>
+          <summary>Il me faut un serveur Discord ?</summary>
+          <p>
+            Oui, un serveur où tu peux gérer les webhooks. Tu n'en as pas ? Tu peux en créer un rien que pour toi
+            en 30 secondes, c'est expliqué dans le <Link href="/guide">guide</Link>.
+          </p>
+        </details>
+        <details>
+          <summary>Faut-il inviter un bot sur mon serveur ?</summary>
+          <p>
+            Non. Un webhook peut seulement poster des messages dans le salon que tu as choisi : il ne lit rien et
+            n'a aucun autre accès à ton serveur. Tu peux le supprimer à tout moment depuis Discord.
+          </p>
+        </details>
+        <details>
+          <summary>Je viens d'ajouter une série, pourquoi je ne reçois rien ?</summary>
+          <p>
+            Pour ne pas te spammer, les épisodes déjà sortis sont archivés sans notification lors de la première
+            analyse. Tu reçois ensuite un message pour chaque nouvel épisode.
+          </p>
+        </details>
+        <details>
+          <summary>Quelles données sont conservées ?</summary>
+          <p>
+            Ce que Discord transmet à la connexion (identifiant, pseudo, avatar, email), tes séries et tes
+            webhooks. Tu peux tout supprimer à tout moment depuis ton tableau de bord.
+          </p>
+        </details>
       </section>
     </main>
   );

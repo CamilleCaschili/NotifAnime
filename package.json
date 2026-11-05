@@ -6,8 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test-scrape": "node src/scrape.js",
-    "add-anime": "node src/addAnime.js"
+    "test-scrape": "node src/scrape.js"
   },
   "license": "ISC",
   "dependencies": {

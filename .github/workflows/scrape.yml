@@ -5,9 +5,15 @@ on:
     - cron: "0 */6 * * *" # toutes les 6h
   workflow_dispatch:
 
+# Jamais deux scrapings en même temps (évite les notifications en double).
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -23,3 +29,5 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           BASE_URL: ${{ secrets.BASE_URL }}
+          # Optionnel : webhook Discord perso pour les alertes techniques
+          ADMIN_WEBHOOK_URL: ${{ secrets.ADMIN_WEBHOOK_URL }}

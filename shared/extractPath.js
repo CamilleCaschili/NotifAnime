@@ -1,6 +1,6 @@
 /**
  * Extrait le chemin (path) d'une URL, quel que soit le domaine collé.
- * Partagé entre la CLI (src/addAnime.js) et l'app web (web/app/actions.js).
+ * Partagé entre le scraper (src/) et l'app web (web/), via shared/animePath.js.
  * Ex: "https://voir-anime.to/anime/wandance/" -> "/anime/wandance/"
  * Ex: "/anime/wandance/" (déjà un chemin) -> "/anime/wandance/"
  */

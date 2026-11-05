@@ -1,30 +1,43 @@
 import { NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 
-// Authentification HTTP Basic très simple : le navigateur affiche une popup
-// login/mot de passe native. Suffisant pour un usage perso, pas un vrai
-// système de comptes (pas besoin vu qu'il n'y a qu'un seul utilisateur).
-// (Next 16 : "proxy" remplace l'ancienne convention "middleware".)
-export function proxy(request) {
-  const authHeader = request.headers.get("authorization");
+// Exécuté avant chaque page (Next 16 : "proxy" remplace "middleware").
+// 1. Rafraîchit la session Supabase si son jeton a expiré, et renvoie les
+//    nouveaux cookies au navigateur.
+// 2. Renvoie vers l'accueil les visiteurs non connectés qui ouvrent /dashboard.
+export async function proxy(request) {
+  let response = NextResponse.next({ request });
 
-  if (authHeader?.startsWith("Basic ")) {
-    const decoded = atob(authHeader.slice("Basic ".length));
-    // On coupe au premier ":" seulement : le mot de passe peut en contenir.
-    const sep = decoded.indexOf(":");
-    const user = decoded.slice(0, sep);
-    const pwd = decoded.slice(sep + 1);
+  const supabase = createServerClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet, headers) {
+        for (const { name, value } of cookiesToSet) request.cookies.set(name, value);
+        response = NextResponse.next({ request });
+        for (const { name, value, options } of cookiesToSet) response.cookies.set(name, value, options);
+        // Empêche un cache intermédiaire de servir la session d'un utilisateur à un autre.
+        for (const [key, value] of Object.entries(headers ?? {})) response.headers.set(key, value);
+      },
+    },
+  });
 
-    if (sep !== -1 && user === process.env.APP_USERNAME && pwd === process.env.APP_PASSWORD) {
-      return NextResponse.next();
-    }
+  // Ne rien mettre entre la création du client et cet appel : c'est lui qui
+  // rafraîchit la session.
+  const { data } = await supabase.auth.getClaims();
+  const isLoggedIn = Boolean(data?.claims?.sub);
+
+  if (!isLoggedIn && request.nextUrl.pathname.startsWith("/dashboard")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    url.search = "?notice=login_required";
+    return NextResponse.redirect(url);
   }
 
-  return new NextResponse("Authentification requise.", {
-    status: 401,
-    headers: { "WWW-Authenticate": 'Basic realm="anime-notifs"' },
-  });
+  return response;
 }
 
 export const config = {
-  matcher: "/((?!_next/static|_next/image|favicon.ico).*)",
+  matcher: "/((?!_next/static|_next/image|favicon.ico|icon.svg).*)",
 };

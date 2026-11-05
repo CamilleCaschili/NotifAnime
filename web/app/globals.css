@@ -1,16 +1,24 @@
 :root {
   --bg: #0f1115;
   --card: #171a21;
+  --card-2: #1d212a;
   --border: #262b36;
   --text: #e6e8ec;
   --muted: #8b92a3;
   --accent: #7c9aff;
   --danger: #e5637a;
   --success: #5fd39a;
+  --warning: #f0b45b;
+  --discord: #5865f2;
+  --radius: 10px;
 }
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -19,6 +27,20 @@ body {
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+}
+
+code {
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.85em;
+  word-break: break-all;
 }
 
 main {
@@ -27,15 +49,20 @@ main {
   padding: 40px 20px 80px;
 }
 
+main.page-wide {
+  max-width: 1040px;
+}
+
 h1 {
   font-size: 1.5rem;
-  margin-bottom: 4px;
+  margin: 0 0 4px;
+  line-height: 1.25;
 }
 
 .subtitle {
   color: var(--muted);
   margin-top: 0;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   font-size: 0.9rem;
 }
 
@@ -48,7 +75,657 @@ h2 {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--muted);
+  margin: 0 0 12px;
+}
+
+/* ---------------------------------------------------------------- Header */
+
+.site-header {
+  border-bottom: 1px solid var(--border);
+  background: rgba(15, 17, 21, 0.85);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.site-header-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #0f1115;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.9rem;
+}
+
+.site-nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  color: var(--text);
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-user img {
+  border-radius: 50%;
+}
+
+.nav-user span {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.link-button:hover {
+  color: var(--text);
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 24px 20px 40px;
+}
+
+.site-footer p {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------- Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-large {
+  padding: 12px 20px;
+  font-size: 1rem;
+}
+
+.btn-discord {
+  background: var(--discord);
+  color: #fff;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #0f1115;
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #0f1115;
+}
+
+.btn:hover {
+  filter: brightness(1.08);
+}
+
+.site-nav .btn-discord {
+  color: #fff;
+}
+
+/* --------------------------------------------------------------- Notices */
+
+.notice {
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 12px 16px;
+  margin: 0 0 24px;
+  font-size: 0.9rem;
+}
+
+.notice-success {
+  border-left-color: var(--success);
+}
+
+.notice-error {
+  border-left-color: var(--danger);
+}
+
+.notice-info {
+  border-left-color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ Home */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  padding: 32px 0 24px;
+  margin-bottom: 56px;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  margin-bottom: 16px;
+}
+
+.hero-lead {
+  color: var(--muted);
+  font-size: 1.1rem;
+  margin: 0 0 24px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-note {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: 16px;
+}
+
+.section-title {
+  margin-bottom: 16px;
+}
+
+.steps-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.steps-grid li {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.steps-grid h3 {
+  font-size: 1rem;
+  margin: 12px 0 6px;
+}
+
+.steps-grid p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.step-number {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0f1115;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.faq details {
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+
+.faq summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.faq details p {
+  color: var(--muted);
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+}
+
+/* Aperçu d'un message Discord (couleurs du thème sombre de Discord) */
+.discord-preview {
+  background: #313338;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  color: #dbdee1;
+  font-size: 0.9rem;
+}
+
+.discord-message {
+  display: flex;
+  gap: 12px;
+}
+
+.discord-avatar {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0f1115;
+}
+
+.discord-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.discord-author {
+  font-weight: 600;
+  color: #f2f3f5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.discord-bot-tag {
+  background: var(--discord);
+  color: #fff;
+  font-size: 0.65rem;
+  border-radius: 3px;
+  padding: 0 4px;
+}
+
+.discord-time {
+  color: #949ba4;
+  font-weight: 400;
+  font-size: 0.75rem;
+}
+
+.discord-embed {
+  margin-top: 6px;
+  display: flex;
+  gap: 12px;
+  background: #2b2d31;
+  border-left: 4px solid var(--accent);
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+
+.discord-embed-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.discord-embed-title {
+  color: #00a8fc;
+  font-weight: 600;
+}
+
+.discord-embed-footer {
+  color: #949ba4;
+  font-size: 0.75rem;
+}
+
+.discord-embed-thumb {
+  flex-shrink: 0;
+  width: 64px;
+  height: 90px;
+  border-radius: 4px;
+  margin-left: auto;
+  background: linear-gradient(160deg, #7c9aff 0%, #b07cff 55%, #ff7cb4 100%);
+}
+
+/* ----------------------------------------------------------------- Guide */
+
+.guide .lead {
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 12px 0 24px;
+}
+
+.callout {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  font-size: 0.9rem;
+  margin-bottom: 32px;
+}
+
+.ui-chip {
+  display: inline-block;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0 7px;
+  font-size: 0.85em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ui-path-sep {
+  color: var(--muted);
+  margin: 0 4px;
+}
+
+.guide-steps {
+  list-style: none;
+  counter-reset: step;
+  padding: 0;
+  margin: 0 0 32px;
+}
+
+.guide-steps > li {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 28px 48px;
+  border-left: 2px solid var(--border);
+  margin-left: 15px;
+}
+
+.guide-steps > li:last-child {
+  border-left-color: transparent;
+}
+
+.guide-steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: -16px;
+  top: -2px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0f1115;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.guide-steps h2 {
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text);
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.guide-steps p {
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+}
+
+.url-example {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  overflow-x: auto;
+  margin: 0 0 10px;
+}
+
+.warning {
+  color: var(--warning);
+}
+
+.guide-cta {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 48px;
+}
+
+/* Maquette simplifiée de l'écran Intégrations > Webhooks */
+.discord-settings {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  margin: 16px 0 8px;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 0.8rem;
+  color: #dbdee1;
+  border: 1px solid #1e1f22;
+}
+
+.ds-sidebar {
+  background: #2b2d31;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #b5bac1;
+}
+
+.ds-sidebar > span {
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.ds-sidebar-title {
+  color: #949ba4;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.ds-active {
+  background: #404249;
+  color: #fff;
+}
+
+.ds-main {
+  background: #313338;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ds-heading {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #f2f3f5;
+}
+
+.ds-button {
+  background: var(--discord);
+  color: #fff;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-weight: 600;
+}
+
+.ds-button-secondary {
+  background: #4e5058;
+}
+
+.ds-highlight {
+  outline: 2px solid var(--warning);
+  outline-offset: 3px;
+}
+
+.ds-webhook {
+  display: flex;
+  gap: 12px;
+  background: #2b2d31;
+  border-radius: 6px;
+  padding: 10px;
+  width: 100%;
+}
+
+.ds-webhook-avatar {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0f1115;
+}
+
+.ds-webhook-fields {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.ds-label {
+  color: #b5bac1;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.ds-input {
+  background: #1e1f22;
+  border-radius: 4px;
+  padding: 3px 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ds-link-danger {
+  color: #f23f43;
+}
+
+.discord-settings figcaption {
+  grid-column: 1 / -1;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.75rem;
+  padding: 6px 12px;
+}
+
+/* ------------------------------------------------------------- Dashboard */
+
+.checklist {
+  list-style: none;
+  padding: 16px;
+  margin: 0 0 32px;
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.checklist li::before {
+  content: "○";
+  color: var(--muted);
+  margin-right: 8px;
+}
+
+.checklist li.done {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.checklist li.done::before {
+  content: "✓";
+  color: var(--success);
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  flex-wrap: wrap;
   margin-bottom: 12px;
+}
+
+.section-head h2 {
+  margin: 0;
+}
+
+.section-link {
+  font-size: 0.85rem;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: 8px 0 0;
 }
 
 .add-form {
@@ -57,18 +734,24 @@ h2 {
   flex-wrap: wrap;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 16px;
 }
 
 .add-form input {
   flex: 1 1 200px;
+  min-width: 0;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 12px;
   color: var(--text);
   font-size: 0.9rem;
+}
+
+.add-form input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
 }
 
 .add-form button {
@@ -86,6 +769,11 @@ h2 {
   opacity: 0.9;
 }
 
+.add-form button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .item {
   display: flex;
   align-items: center;
@@ -93,13 +781,34 @@ h2 {
   gap: 12px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 14px 16px;
   margin-bottom: 8px;
 }
 
-.item.inactive {
-  opacity: 0.5;
+.item.inactive .item-main,
+.item.inactive > .item-info {
+  opacity: 0.6;
+}
+
+.item-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.poster {
+  flex-shrink: 0;
+  width: 40px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--card-2);
+}
+
+.item-info {
+  min-width: 0;
 }
 
 .item-info strong {
@@ -108,8 +817,18 @@ h2 {
 }
 
 .item-info span {
+  display: block;
   color: var(--muted);
   font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.item-info .status-ok {
+  color: var(--success);
+}
+
+.item-info .status-danger {
+  color: var(--danger);
 }
 
 .item-actions {
@@ -135,6 +854,10 @@ h2 {
 
 .item-actions button:hover {
   background: var(--border);
+}
+
+.item + .add-form {
+  margin-top: 12px;
 }
 
 .episode {
@@ -164,4 +887,96 @@ h2 {
   color: var(--muted);
   font-size: 0.85rem;
   font-style: italic;
+}
+
+.danger-zone details {
+  margin-top: 12px;
+}
+
+.danger-zone summary {
+  cursor: pointer;
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+.delete-account {
+  margin-top: 12px;
+  background: var(--card);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.delete-account p {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- Mobile */
+
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-top: 8px;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  main {
+    padding: 28px 16px 64px;
+  }
+
+  .site-header-inner {
+    padding: 10px 16px;
+  }
+
+  .site-nav {
+    gap: 12px;
+  }
+
+  .nav-user span,
+  .hide-sm {
+    display: none;
+  }
+
+  .btn-large {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .item-actions {
+    justify-content: flex-end;
+  }
+
+  .discord-settings {
+    grid-template-columns: 1fr;
+  }
+
+  .ds-sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .ds-sidebar-title {
+    width: 100%;
+  }
+
+  .guide-steps > li {
+    padding-left: 32px;
+  }
 }
