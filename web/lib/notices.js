@@ -8,6 +8,8 @@ const NOTICES = {
   // Connexion / compte
   login_required: ["info", "Connecte-toi pour accéder à ton tableau de bord."],
   login_failed: ["error", "La connexion avec Discord n'a pas abouti. Réessaie."],
+  login_cancelled: ["info", "Connexion annulée sur Discord."],
+  login_email_required: ["error", "Discord n'a pas transmis d'adresse email : vérifie l'email de ton compte Discord (Paramètres > Mon compte), puis réessaie."],
   account_deleted: ["success", "Ton compte et toutes tes données ont été supprimés."],
   confirm_required: ["error", "Coche la case de confirmation pour supprimer ton compte."],
 
