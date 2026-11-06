@@ -531,6 +531,28 @@ h2 {
   margin: 0 0 48px;
 }
 
+.dns-tip {
+  margin: 20px 0 0;
+  scroll-margin-top: 80px; /* lien /guide#dns : ne pas passer sous l'en-tête collant */
+}
+
+.dns-tip p {
+  margin: 8px 0;
+  font-size: 0.9rem;
+}
+
+.dns-tip ul {
+  margin: 8px 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dns-tip .ui-chip {
+  white-space: normal;
+}
+
 /* Maquette simplifiée de l'écran Intégrations > Webhooks */
 .discord-settings {
   display: grid;

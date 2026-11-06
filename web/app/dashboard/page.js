@@ -5,6 +5,7 @@ import { MAX_CHANNELS, MAX_SUBSCRIPTIONS } from "../../lib/notices.js";
 import { titleFromPath } from "../../../shared/animePath.js";
 import { maskWebhookUrl } from "../../../shared/discord.js";
 import { Notice } from "../components.js";
+import { VOIRANIME_URL } from "../../lib/voiranime.js";
 import {
   addChannel,
   deleteAccount,
@@ -160,7 +161,7 @@ export default async function DashboardPage({ searchParams }) {
           <input
             type="text"
             name="url"
-            placeholder="https://voir-anime.to/anime/nom-de-la-serie/"
+            placeholder={`${VOIRANIME_URL}/anime/nom-de-la-serie/`}
             aria-label="Lien de la série sur voiranime"
             maxLength={300}
             required
@@ -169,7 +170,10 @@ export default async function DashboardPage({ searchParams }) {
             Suivre
           </button>
         </form>
-        <p className="hint">Colle le lien de la page de la série sur voiranime (un lien d'épisode marche aussi).</p>
+        <p className="hint">
+          Colle le lien de la page de la série sur voiranime (un lien d'épisode marche aussi). voiranime ne
+          s'ouvre pas chez toi ? <Link href="/guide#dns">Voir l'astuce</Link>.
+        </p>
       </section>
 
       <section>

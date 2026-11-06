@@ -2,11 +2,50 @@ import Link from "next/link";
 import { getSession } from "../../lib/supabase.js";
 import { LoginButton, PrimaryLink } from "../components.js";
 import { MAX_CHANNELS } from "../../lib/notices.js";
+import { VOIRANIME_HOST, VOIRANIME_URL } from "../../lib/voiranime.js";
 
 export const metadata = {
   title: "Guide : recevoir les notifs sur Discord · Anime Notifs",
   description: "Créer un webhook Discord et le connecter à Anime Notifs, étape par étape.",
 };
+
+/** Astuce pour ouvrir voiranime quand le fournisseur d'accès bloque son adresse. */
+function DnsTip() {
+  return (
+    <aside className="callout dns-tip" id="dns">
+      <strong>voiranime ne s'ouvre pas chez toi ?</strong>
+      <p>
+        Certains fournisseurs d'accès bloquent son adresse au niveau de leur DNS, l'annuaire qui traduit le nom
+        d'un site en adresse : le site fonctionne, mais ta box refuse de le trouver. Tes notifications ne sont
+        pas concernées, on vérifie les sorties depuis nos serveurs. Pour l'ouvrir toi-même, active le{" "}
+        <strong>DNS sécurisé</strong> de ton navigateur :
+      </p>
+      <ul>
+        <li>
+          <strong>Chrome / Edge :</strong>{" "}
+          <Path items={["Paramètres", "Confidentialité et sécurité", "Sécurité", "Utiliser un DNS sécurisé"]} />,
+          puis choisis Cloudflare (1.1.1.1) ou Google.
+        </li>
+        <li>
+          <strong>Firefox :</strong> <Path items={["Paramètres", "Vie privée et sécurité", "DNS via HTTPS"]} />,
+          puis « Protection augmentée » avec Cloudflare.
+        </li>
+        <li>
+          <strong>Android :</strong> <Path items={["Paramètres", "Réseau et Internet", "DNS privé"]} />, puis
+          saisis <code>one.one.one.one</code>.
+        </li>
+        <li>
+          <strong>iPhone :</strong> installe l'appli « 1.1.1.1 » de Cloudflare et active-la.
+        </li>
+      </ul>
+      <p>
+        Redémarre ensuite ton navigateur. Méfie-toi des autres adresses trouvées sur les moteurs de recherche :
+        ce sont souvent des copies pleines de pubs. L'adresse utilisée par Anime Notifs est{" "}
+        <code>{VOIRANIME_HOST}</code>.
+      </p>
+    </aside>
+  );
+}
 
 function Path({ items }) {
   return (
@@ -140,7 +179,7 @@ export default async function GuidePage() {
           <h2>Ajoute tes séries</h2>
           <p>
             Sur voiranime, ouvre la page de la série et copie son adresse, par exemple{" "}
-            <code>https://voir-anime.to/anime/wandance/</code>. Colle-la dans « Ajouter une série ». Un lien
+            <code>{VOIRANIME_URL}/anime/wandance/</code>. Colle-la dans « Ajouter une série ». Un lien
             d'épisode marche aussi : on retrouve la série tout seuls.
           </p>
           <p>
@@ -148,6 +187,7 @@ export default async function GuidePage() {
             pour ne pas te spammer. Ensuite, chaque nouvel épisode t'est annoncé. Les sorties sont vérifiées
             toutes les 6 heures.
           </p>
+          <DnsTip />
         </li>
       </ol>
 
@@ -191,6 +231,13 @@ export default async function GuidePage() {
             Juste après l'ajout d'une série, c'est normal : les épisodes déjà sortis ne sont pas annoncés, et la
             vérification a lieu toutes les 6 heures. Pour vérifier que ton salon reçoit bien les messages, utilise
             le bouton « Tester » du tableau de bord.
+          </p>
+        </details>
+        <details>
+          <summary>voiranime ne s'ouvre pas chez moi</summary>
+          <p>
+            Ton fournisseur d'accès bloque sûrement son adresse : voir{" "}
+            <a href="#dns">l'astuce du DNS sécurisé</a>. Tes notifications, elles, continuent d'arriver.
           </p>
         </details>
         <details>

@@ -81,6 +81,14 @@ export default async function HomePage({ searchParams }) {
           </p>
         </details>
         <details>
+          <summary>voiranime ne s'ouvre pas chez moi, ça marche quand même ?</summary>
+          <p>
+            Oui : on vérifie les sorties depuis nos serveurs, tes notifications arrivent même si ton fournisseur
+            d'accès bloque le site. Pour l'ouvrir toi-même, suis{" "}
+            <Link href="/guide#dns">l'astuce du DNS sécurisé</Link>.
+          </p>
+        </details>
+        <details>
           <summary>Quelles données sont conservées ?</summary>
           <p>
             Ce que Discord transmet à la connexion (identifiant, pseudo, avatar, email), tes séries et tes

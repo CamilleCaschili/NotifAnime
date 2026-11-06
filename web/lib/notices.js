@@ -1,3 +1,5 @@
+import { VOIRANIME_URL } from "./voiranime.js";
+
 // Limites appliquées par la base (voir supabase/schema.sql) — à garder synchronisées.
 export const MAX_SUBSCRIPTIONS = 100;
 export const MAX_CHANNELS = 5;
@@ -16,7 +18,7 @@ const NOTICES = {
   // Séries
   anime_added: ["success", "Série ajoutée ! Ses épisodes déjà sortis seront archivés sans notif à la prochaine analyse : seuls les suivants te seront annoncés."],
   already_following: ["info", "Tu suis déjà cette série."],
-  invalid_anime_url: ["error", "Ce lien n'est pas une page de série voiranime. Exemple attendu : https://voir-anime.to/anime/wandance/"],
+  invalid_anime_url: ["error", `Ce lien n'est pas une page de série voiranime. Exemple attendu : ${VOIRANIME_URL}/anime/wandance/`],
   subscription_limit: ["error", `Tu as atteint la limite de ${MAX_SUBSCRIPTIONS} séries. Retire-en une pour en ajouter une autre.`],
   subscription_paused: ["success", "Série mise en pause : plus de notifs pour elle jusqu'à ce que tu la reprennes."],
   subscription_resumed: ["success", "Série reprise : tu seras notifié des prochains épisodes."],

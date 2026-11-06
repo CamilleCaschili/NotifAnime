@@ -52,6 +52,9 @@ existe, donc qu'on puisse déjà se connecter au site.
   - ajoute `SUPABASE_ANON_KEY` = la clé `anon` / `publishable` (Supabase >
     Project Settings > API Keys) ;
   - garde `SUPABASE_URL` ;
+  - optionnel : `BASE_URL` (même valeur que le secret GitHub). C'est l'adresse
+    de voiranime affichée sur le site (exemples, astuce DNS) ; par défaut
+    `https://voir-anime.to` ;
   - supprime `SUPABASE_SERVICE_KEY`, `APP_USERNAME` et `APP_PASSWORD` : le site
     ne s'en sert plus.
 - **GitHub** (Settings > Secrets and variables > Actions) : ajoute
@@ -90,7 +93,7 @@ sur **Tester** à côté du salon, puis lance le workflow à la main (onglet
    en option, `ADMIN_WEBHOOK_URL`. Le workflow `.github/workflows/scrape.yml`
    tourne toutes les 6 h et peut être lancé à la main (`workflow_dispatch`).
 4. **Vercel** : importe le repo avec **Root Directory = `web`**, variables
-   `SUPABASE_URL` et `SUPABASE_ANON_KEY`.
+   `SUPABASE_URL`, `SUPABASE_ANON_KEY` et, en option, `BASE_URL`.
 
 ## En local
 
@@ -117,8 +120,8 @@ npm run dev            # http://localhost:3000
 - **Webhook supprimé côté Discord** : le salon est désactivé automatiquement ;
   le bouton « Tester » le réactive s'il refonctionne.
 - **Changement de domaine voiranime** : les épisodes sont identifiés par leur
-  chemin (sans domaine), donc rien n'est renvoyé. Mets à jour le secret
-  `BASE_URL` ; une alerte part sur `ADMIN_WEBHOOK_URL` si voiranime redirige
+  chemin (sans domaine), donc rien n'est renvoyé. Mets à jour `BASE_URL`
+  (secret GitHub, et variable Vercel si tu l'as définie) ; une alerte part sur `ADMIN_WEBHOOK_URL` si voiranime redirige
   ailleurs ou si toutes les séries échouent 2 runs d'affilée.
 - **Limites par compte** : 100 séries et 5 salons (définies dans
   `supabase/schema.sql` et `web/lib/notices.js`).
