@@ -553,19 +553,252 @@ h2 {
   white-space: normal;
 }
 
-/* Maquette simplifiée de l'écran Intégrations > Webhooks */
-.discord-settings {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  margin: 16px 0 8px;
+/* Choix ordinateur / téléphone. Sans choix, la largeur d'écran décide.
+   On ne fait que masquer (display: none) pour ne pas écraser le display
+   propre de chaque élément. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.device-switch {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 28px;
+  font-size: 0.9rem;
+}
+
+.device-switch-label {
+  color: var(--muted);
+  margin-right: 4px;
+}
+
+.device-switch label {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.device-switch input:focus-visible + label {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.device-switch input:checked + label {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0f1115;
+}
+
+.guide:has(#device-desktop:checked) .only-mobile,
+.guide:has(#device-mobile:checked) .only-desktop {
+  display: none;
+}
+
+@media (min-width: 761px) {
+  .guide:not(:has(#device-mobile:checked)) .only-mobile {
+    display: none;
+  }
+
+  .device-switch:not(:has(:checked)) label[for="device-desktop"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0f1115;
+  }
+}
+
+@media (max-width: 760px) {
+  .guide:not(:has(#device-desktop:checked)) .only-desktop {
+    display: none;
+  }
+
+  .device-switch:not(:has(:checked)) label[for="device-mobile"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0f1115;
+  }
+}
+
+.step-where {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.guide-steps p.step-note {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.step-login {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin: 0 0 12px;
+}
+
+.step-login p {
+  margin: 0 0 10px;
+}
+
+/* Maquettes simplifiées de Discord : le bouton à toucher est entouré. */
+.mock {
+  margin: 14px 0 12px;
+}
+
+.mock-screens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.mock figcaption {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-top: 6px;
+}
+
+.mock-window {
+  display: flex;
+  width: 100%;
   border-radius: 10px;
   overflow: hidden;
   font-size: 0.8rem;
   color: #dbdee1;
   border: 1px solid #1e1f22;
+  background: #313338;
+}
+
+.ds-highlight {
+  outline: 3px solid var(--warning);
+  outline-offset: 3px;
+  animation: ds-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes ds-pulse {
+  50% {
+    outline-color: rgba(240, 180, 91, 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-highlight {
+    animation: none;
+  }
+}
+
+.ds-rail {
+  flex-shrink: 0;
+  background: #1e1f22;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ds-rail-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #313338;
+  color: #dbdee1;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.ds-rail-home {
+  background: var(--discord);
+  border-radius: 12px;
+}
+
+.ds-rail-sep {
+  width: 24px;
+  height: 2px;
+  background: #35363c;
+}
+
+.ds-rail-plus {
+  color: #23a55a;
+  font-size: 1.3rem;
+  font-weight: 400;
+}
+
+.ds-modal {
+  margin: 14px auto;
+  background: #2b2d31;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(260px, calc(100% - 28px));
+}
+
+.ds-option {
+  border: 1px solid #3f4147;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-weight: 600;
+}
+
+.ds-muted {
+  color: #949ba4;
+  font-size: 0.75rem;
+}
+
+.ds-channels {
+  flex: 1;
+  background: #2b2d31;
+  padding: 0 0 12px;
+  min-width: 0;
+}
+
+.ds-server-name {
+  display: block;
+  padding: 12px 14px;
+  font-weight: 700;
+  color: #f2f3f5;
+  border-bottom: 1px solid #1e1f22;
+}
+
+.ds-menu {
+  margin: 8px;
+  max-width: 220px;
+  background: #111214;
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ds-menu > span {
+  padding: 6px 8px;
+  border-radius: 4px;
 }
 
 .ds-sidebar {
+  flex-shrink: 0;
+  width: 150px;
   background: #2b2d31;
   padding: 14px 10px;
   display: flex;
@@ -592,12 +825,12 @@ h2 {
 }
 
 .ds-main {
-  background: #313338;
+  flex: 1;
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
 }
 
@@ -617,11 +850,6 @@ h2 {
 
 .ds-button-secondary {
   background: #4e5058;
-}
-
-.ds-highlight {
-  outline: 2px solid var(--warning);
-  outline-offset: 3px;
 }
 
 .ds-webhook {
@@ -677,12 +905,77 @@ h2 {
   color: #f23f43;
 }
 
-.discord-settings figcaption {
-  grid-column: 1 / -1;
-  background: var(--card);
-  color: var(--muted);
+/* Écrans de téléphone */
+.phone {
+  width: 196px;
+  max-width: 100%;
+  background: #313338;
+  border: 6px solid #1e1f22;
+  border-radius: 22px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #dbdee1;
+}
+
+.phone-title {
+  font-weight: 700;
+  color: #f2f3f5;
+  padding: 0 4px 6px;
+  border-bottom: 1px solid #1e1f22;
+}
+
+.phone-list {
+  display: flex;
+  flex-direction: column;
+  background: #2b2d31;
+  border-radius: 8px;
+  overflow: visible;
+}
+
+.phone-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.phone-row + .phone-row {
+  border-top: 1px solid #3f4147;
+}
+
+.phone-row span {
+  color: #949ba4;
+}
+
+.phone-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.phone-actions span {
+  background: #2b2d31;
+  border-radius: 8px;
+  padding: 8px 4px;
+  text-align: center;
   font-size: 0.75rem;
-  padding: 6px 12px;
+}
+
+.phone-button {
+  background: var(--discord);
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.phone-avatar {
+  align-self: center;
 }
 
 /* ------------------------------------------------------------- Dashboard */
@@ -714,6 +1007,31 @@ h2 {
 .checklist li.done::before {
   content: "✓";
   color: var(--success);
+}
+
+.setup-help {
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+}
+
+.setup-help p {
+  margin: 0;
+}
+
+.setup-help ol {
+  margin: 10px 0;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setup-help .ui-chip {
+  white-space: normal;
 }
 
 .section-head {
@@ -1016,17 +1334,16 @@ main.error-screen {
     justify-content: flex-end;
   }
 
-  .discord-settings {
+  .mock-settings .ds-sidebar {
+    display: none; /* pas la place : le titre « Intégrations › Webhooks » suffit */
+  }
+
+  .ds-webhook-fields {
     grid-template-columns: 1fr;
   }
 
-  .ds-sidebar {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .ds-sidebar-title {
-    width: 100%;
+  .device-switch-label {
+    flex-basis: 100%;
   }
 
   .guide-steps > li {

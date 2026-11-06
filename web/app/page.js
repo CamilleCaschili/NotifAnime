@@ -1,9 +1,14 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getSession } from "../lib/supabase.js";
-import { DiscordEmbedPreview, LoginButton, Notice, PrimaryLink } from "./components.js";
+import { getNotice } from "../lib/notices.js";
+import { DiscordEmbedPreview, LoginButton, Notice } from "./components.js";
 
 export default async function HomePage({ searchParams }) {
   const [{ user }, { notice }] = await Promise.all([getSession(), searchParams]);
+  // Déjà connecté : l'accueil ne sert à rien, on va droit au tableau de bord
+  // (en gardant le message éventuel, s'il fait partie des messages connus).
+  if (user) redirect(getNotice(notice) ? `/dashboard?notice=${notice}` : "/dashboard");
 
   return (
     <main className="page-wide">
@@ -17,13 +22,7 @@ export default async function HomePage({ searchParams }) {
             Discord dès qu'un nouvel épisode sort.
           </p>
           <div className="hero-actions">
-            {user ? (
-              <PrimaryLink href="/dashboard" large>
-                Ouvrir mon tableau de bord
-              </PrimaryLink>
-            ) : (
-              <LoginButton large />
-            )}
+            <LoginButton large />
             <Link href="/guide" className="btn btn-ghost btn-large">
               Lire le guide
             </Link>
@@ -45,8 +44,8 @@ export default async function HomePage({ searchParams }) {
             <span className="step-number">2</span>
             <h3>Branche un salon</h3>
             <p>
-              Crée un webhook dans le salon de ton choix et colle son adresse. Compte 2 minutes, le{" "}
-              <Link href="/guide">guide pas à pas</Link> t'accompagne.
+              Crée un lien « webhook » dans ton serveur Discord et colle-le sur le site. Compte 2 minutes, le{" "}
+              <Link href="/guide">guide en images</Link> t'accompagne.
             </p>
           </li>
           <li>

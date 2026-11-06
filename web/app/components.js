@@ -22,6 +22,20 @@ export function LoginButton({ children = "Se connecter avec Discord", large = fa
   );
 }
 
+/** Chemin de menus à suivre, ex. Paramètres › Intégrations. */
+export function Path({ items }) {
+  return (
+    <span className="ui-path">
+      {items.map((item, i) => (
+        <span key={item}>
+          {i > 0 && <span className="ui-path-sep">›</span>}
+          <span className="ui-chip">{item}</span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
 export function PrimaryLink({ href, children, large = false }) {
   return (
     <Link href={href} className={`btn btn-primary${large ? " btn-large" : ""}`}>

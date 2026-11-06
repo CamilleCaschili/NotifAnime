@@ -4,7 +4,7 @@ import { getSession } from "../../lib/supabase.js";
 import { MAX_CHANNELS, MAX_SUBSCRIPTIONS } from "../../lib/notices.js";
 import { titleFromPath } from "../../../shared/animePath.js";
 import { maskWebhookUrl } from "../../../shared/discord.js";
-import { Notice } from "../components.js";
+import { Notice, Path } from "../components.js";
 import { VOIRANIME_URL } from "../../lib/voiranime.js";
 import {
   addChannel,
@@ -91,13 +91,7 @@ export default async function DashboardPage({ searchParams }) {
       {needsOnboarding && (
         <ol className="checklist">
           <li className={activeChannels.length > 0 ? "done" : ""}>
-            <a href="#salons">Connecte un salon Discord</a>
-            {activeChannels.length === 0 && (
-              <>
-                {" "}
-                · <Link href="/guide">comment faire ?</Link>
-              </>
-            )}
+            <a href="#salons">Relie un salon Discord</a> (2 minutes)
           </li>
           <li className={subscriptions.length > 0 ? "done" : ""}>
             <a href="#series">Ajoute ta première série</a>
@@ -111,7 +105,7 @@ export default async function DashboardPage({ searchParams }) {
             Salons Discord ({channels.length}/{MAX_CHANNELS})
           </h2>
           <Link href="/guide" className="section-link">
-            Guide : créer un webhook
+            Guide en images
           </Link>
         </div>
 
@@ -139,6 +133,29 @@ export default async function DashboardPage({ searchParams }) {
           </div>
         ))}
 
+        {activeChannels.length === 0 && (
+          <div className="setup-help">
+            <p>
+              <strong>Où trouver ce lien ?</strong> Il se crée dans Discord :
+            </p>
+            <ol>
+              <li>
+                Sur ton serveur : <Path items={["Paramètres du serveur", "Intégrations", "Webhooks", "Nouveau webhook"]} />
+              </li>
+              <li>
+                Ouvre le webhook créé, puis <span className="ui-chip">Copier l'URL du webhook</span>
+              </li>
+              <li>
+                Colle le lien ci-dessous et clique sur <span className="ui-chip">Connecter</span>
+              </li>
+            </ol>
+            <p>
+              Pas de serveur, ou tu ne trouves pas ? <Link href="/guide">Suis le guide en images</Link>, pour
+              ordinateur et téléphone.
+            </p>
+          </div>
+        )}
+
         {channels.length < MAX_CHANNELS && (
           <form action={addChannel} className="add-form">
             <input
@@ -149,7 +166,7 @@ export default async function DashboardPage({ searchParams }) {
               maxLength={300}
               required
             />
-            <input type="text" name="label" placeholder="Nom (optionnel)" aria-label="Nom du salon" maxLength={100} />
+            <input type="text" name="label" placeholder="Nom du salon (optionnel)" aria-label="Nom du salon" maxLength={100} />
             <button type="submit">Connecter</button>
           </form>
         )}
